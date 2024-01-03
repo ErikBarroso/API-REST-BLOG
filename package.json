@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest --env node",
+    "test": "jest --env node --detectOpenHandles",
     "start": "nodemon server/server.js"
   },
   "dependencies": {
