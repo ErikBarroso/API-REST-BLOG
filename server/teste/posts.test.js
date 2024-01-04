@@ -35,6 +35,7 @@ test("Should get posts", async function () {
   const response = await request("http://localhost:3000/posts", "get");
   const posts = response.data;
   // then - então
+  expect(response.status).toBe(200);
   expect(posts).toHaveLength(3);
   await postsService.deletePost(post1.id);
   await postsService.deletePost(post2.id);
@@ -52,6 +53,7 @@ test("Should save a post", async function () {
   const response = await request("http://localhost:3000/posts", "post", data);
   const post = response.data;
   // then - então
+  expect(response.status).toBe(201)
   expect(post.title).toBe(data.title);
   expect(post.content).toBe(data.content);
   await postsService.deletePost(post.id);
@@ -67,9 +69,10 @@ test("Should update a post", async function () {
   post.content = generateText();
 
   // when - quando acontecer
-  await request(`http://localhost:3000/posts/${post.id}`, "put", post);
+  const response = await request(`http://localhost:3000/posts/${post.id}`, "put", post);
   const updatePost = await postsService.getPost(post.id);
   // then - então
+  expect(response.status).toBe(204);
   expect(updatePost.title).toBe(post.title);
   expect(updatePost.content).toBe(post.content);
   await postsService.deletePost(post.id);
