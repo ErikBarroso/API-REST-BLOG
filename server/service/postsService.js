@@ -11,7 +11,9 @@ exports.getPost = async function (id) {
   return post;
 };
 
-exports.savePost = function (post) {
+exports.savePost = async function (post) {
+  const existingPost = await postsData.getPostByTitle(post.title);
+  if (existingPost) throw new Error("Post already exists");
   return postsData.savePost(post);
 };
 

@@ -9,8 +9,12 @@ router.get("/posts", async function (req, res) {
 
 router.post("/posts", async function (req, res) {
   const post = req.body;
-  const newPost = await postsService.savePost(post);
-  res.status(201).json(newPost);
+  try {
+    const newPost = await postsService.savePost(post);
+    res.status(201).json(newPost);
+  } catch (e) {
+    res.status(409).send(e.message);
+  }
 });
 
 router.put("/posts/:id", async function (req, res) {
