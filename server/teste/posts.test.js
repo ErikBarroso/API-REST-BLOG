@@ -12,6 +12,7 @@ const request = function (url, method, data) {
     url,
     method,
     data,
+    validateStatus: false,
   });
 };
 
@@ -53,7 +54,7 @@ test("Should save a post", async function () {
   const response = await request("http://localhost:3000/posts", "post", data);
   const post = response.data;
   // then - então
-  expect(response.status).toBe(201)
+  expect(response.status).toBe(201);
   expect(post.title).toBe(data.title);
   expect(post.content).toBe(data.content);
   await postsService.deletePost(post.id);
@@ -69,13 +70,33 @@ test("Should update a post", async function () {
   post.content = generateText();
 
   // when - quando acontecer
-  const response = await request(`http://localhost:3000/posts/${post.id}`, "put", post);
+  const response = await request(
+    `http://localhost:3000/posts/${post.id}`,
+    "put",
+    post
+  );
   const updatePost = await postsService.getPost(post.id);
   // then - então
   expect(response.status).toBe(204);
   expect(updatePost.title).toBe(post.title);
   expect(updatePost.content).toBe(post.content);
   await postsService.deletePost(post.id);
+});
+
+test("Should not update a post", async function () {
+  // given - dado que
+  const post = {
+    id: 1,
+  };
+
+  // when - quando acontecer
+  const response = await request(
+    `http://localhost:3000/posts/${post.id}`,
+    "put",
+    post
+  );
+  // then - então
+  expect(response.status).toBe(404);
 });
 
 test("Should delete a post", async function () {
